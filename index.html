@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas - Windows XP Style</title>
+
+    <!-- ============================================ -->
+    <!-- CSS - ESTILOS VISUAIS (A "ROUPA" DA PÁGINA) -->
+    <!-- ============================================ -->
+    <style>
+        /* 
+         * RESET BÁSICO
+         * Remove margens e paddings padrão do navegador
+         * Isso garante que nosso design comece do zero
+         */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 
+         * CORPO DA PÁGINA
+         * Define o fundo com o clássico wallpaper do Windows XP
+         */
+        body {
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+            background-image: url('winxp.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 
+         * JANELA PRINCIPAL (Estilo Windows XP)
+         * Simula uma janela do sistema operacional
+         */
+        .janela-xp {
+            width: 100%;
+            max-width: 500px;
+            background: #ece9d8; /* Cor clássica do XP */
+            border: 2px solid #0054e3;
+            border-radius: 3px 3px 0 0;
+            box-shadow: 
+                0 0 0 1px #fff inset,
+                0 4px 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* 
+         * BARRA DE TÍTULO (Azul degradê do XP)
+         * A parte de cima da janela com os botões de controle
+         */
+        .barra-titulo {
+            background: linear-gradient(180deg, #0058e6 0%, #3a93ff 10%, #0058e6 100%);
+            color: white;
+            padding: 6px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        }
+
+        /* Ícone e texto da barra de título */
+        .titulo-esquerda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Ícone de checklist */
+        .icone-janela {
+            width: 16px;
+            height: 16px;
+            background: #f0c040;
+            border: 1px solid #c09020;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Botões de controle (minimizar, maximizar, fechar) */
+        .botoes-controle {
+            display: flex;
+            gap: 2px;
+        }
+
+        .btn-controle {
+            width: 20px;
+            height: 18px;
+            border: 1px solid #fff;
+            background: linear-gradient(180deg, #3a93ff 0%, #0058e6 100%);
+            color: white;
+            font-size: 11px;
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .btn-controle:hover {
+            background: linear-gradient(180deg, #5aa3ff 0%, #2070e6 100%);
+        }
+
+        /* 
+         * BARRA DE MENU (Arquivo, Editar, etc.)
+         * Característica clássica das janelas antigas
+         */
+        .barra-menu {
+            background: #ece9d8;
+            padding: 2px 8px;
+            border-bottom: 1px solid #d4d0c8;
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .menu-item {
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #316ac5;
+            color: white;
+        }
+
+        /* 
+         * ÁREA DE CONTEÚDO DA JANELA
+         * Onde ficam as tarefas e o formulário
+         */
+        .conteudo-janela {
+            padding: 15px;
+            background: #ece9d8;
+        }
+
+        /* 
+         * BARRA DE FERRAMENTAS (Toolbar)
+         * Botões de ação principais
+         */
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d4d0c8;
+        }
+
+        /* 
+         * BOTÃO ESTILO WINDOWS XP
+         * Com efeito 3D clássico (bordas claras em cima, escuras embaixo)
+         */
+        .btn-xp {
+            padding: 4px 12px;
+            background: linear-gradient(180deg, #fff 0%, #e8e8e8 50%, #d4d0c8 100%);
+            border: 1px solid #808080;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-xp:active {
+            /* Inverte as bordas quando clicado - efeito "afundado" */
+            border-top-color: #404040;
+            border-left-color: #404040;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            background: #d4d0c8;
+        }
+
+        .btn-xp:hover {
+            background: linear-gradient(180deg, #f0f8ff 0%, #d0e0f0 50%, #b0c0d0 100%);
+        }
+
+        /* 
+         * ÁREA DE INPUT (Adicionar nova tarefa)
+         */
+        .area-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f5f5f5;
+            border: 1px solid #d4d0c8;
+            border-radius: 3px;
+        }
+
+        /* Campo de texto estilo XP */
+        .input-xp {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #7f9db9;
+            border-top-color: #404040;
+            border-left-color: #404040;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 12px;
+            background: white;
+        }
+
+        .input-xp:focus {
+            outline: 1px solid #0058e6;
+            border-color: #0058e6;
+        }
+
+        /* 
+         * LISTA DE TAREFAS
+         * Onde as tarefas aparecem
+         */
+        .lista-tarefas {
+            border: 1px solid #7f9db9;
+            background: white;
+            min-height: 200px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        /* 
+         * CADA ITEM DA LISTA (Tarefa individual)
+         */
+        .item-tarefa {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+            transition: background 0.1s;
+        }
+
+        .item-tarefa:hover {
+            background: #e5f1ff; /* Azul claro ao passar o mouse */
+        }
+
+        .item-tarefa:last-child {
+            border-bottom: none;
+        }
+
+        /* 
+         * CHECKBOX ESTILO XP
+         */
+        .checkbox-xp {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #0058e6;
+        }
+
+        /* 
+         * TEXTO DA TAREFA
+         */
+        .texto-tarefa {
+            flex: 1;
+            color: #000;
+        }
+
+        /* Quando a tarefa está concluída */
+        .item-tarefa.concluida .texto-tarefa {
+            text-decoration: line-through;
+            color: #808080;
+        }
+
+        /* 
+         * BOTÃO DELETAR (X vermelho)
+         */
+        .btn-deletar {
+            width: 20px;
+            height: 20px;
+            background: #c75050;
+            color: white;
+            border: 1px solid #a03030;
+            border-top-color: #e07070;
+            border-left-color: #e07070;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .btn-deletar:hover {
+            background: #e06060;
+        }
+
+        /* 
+         * MENSAGEM QUANDO NÃO HÁ TAREFAS
+         */
+        .sem-tarefas {
+            text-align: center;
+            padding: 40px 20px;
+            color: #808080;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* 
+         * BARRA DE STATUS (Parte inferior da janela)
+         */
+        .barra-status {
+            background: #ece9d8;
+            border-top: 1px solid #d4d0c8;
+            padding: 4px 10px;
+            font-size: 11px;
+            color: #404040;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 
+         * SCROLLBAR ESTILO XP
+         */
+        .lista-tarefas::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        .lista-tarefas::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-left: 1px solid #d4d0c8;
+        }
+
+        .lista-tarefas::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #e8e8e8 0%, #d4d0c8 100%);
+            border: 1px solid #808080;
+            border-top-color: #fff;
+            border-left-color: #fff;
+        }
+
+        /* 
+         * ÍCONE DE LIXEIRA (para excluir todas)
+         */
+        .btn-lixeira {
+            background: linear-gradient(180deg, #fff 0%, #e8e8e8 50%, #d4d0c8 100%);
+            border: 1px solid #808080;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-lixeira:hover {
+            background: linear-gradient(180deg, #ffe0e0 0%, #f0c0c0 50%, #e0a0a0 100%);
+        }
+
+        /* Animação de entrada das tarefas */
+        @keyframes entrar {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .item-tarefa.nova {
+            animation: entrar 0.3s ease;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <!-- ============================================ -->
+    <!-- HTML - ESTRUTURA DA PÁGINA (O "ESQUELETO") -->
+    <!-- ============================================ -->
+
+    <!-- JANELA PRINCIPAL -->
+    <div class="janela-xp">
+
+        <!-- BARRA DE TÍTULO (cabeçalho azul) -->
+        <div class="barra-titulo">
+            <div class="titulo-esquerda">
+                <div class="icone-janela">✓</div>
+                <span>Lista de Tarefas</span>
+            </div>
+            <div class="botoes-controle">
+                <div class="btn-controle">_</div>
+                <div class="btn-controle">□</div>
+                <div class="btn-controle">✕</div>
+            </div>
+        </div>
+
+        <!-- BARRA DE MENU (Arquivo, Editar, etc.) -->
+        <div class="barra-menu">
+            <span class="menu-item">Arquivo</span>
+            <span class="menu-item">Editar</span>
+            <span class="menu-item">Exibir</span>
+            <span class="menu-item">Ajuda</span>
+        </div>
+
+        <!-- CONTEÚDO DA JANELA -->
+        <div class="conteudo-janela">
+
+            <!-- TOOLBAR (botões de ação) -->
+            <div class="toolbar">
+                <button class="btn-xp" onclick="adicionarTarefa()">
+                    ➕ Nova Tarefa
+                </button>
+                <button class="btn-lixeira" onclick="limparConcluidas()">
+                    🗑️ Limpar Concluídas
+                </button>
+            </div>
+
+            <!-- ÁREA DE INPUT (digitar nova tarefa) -->
+            <div class="area-input">
+                <input 
+                    type="text" 
+                    id="inputTarefa" 
+                    class="input-xp" 
+                    placeholder="Digite uma nova tarefa..."
+                    onkeypress="if(event.key==='Enter') adicionarTarefa()"
+                >
+                <button class="btn-xp" onclick="adicionarTarefa()">
+                    Adicionar
+                </button>
+            </div>
+
+            <!-- LISTA DE TAREFAS (onde aparecem as tarefas) -->
+            <div class="lista-tarefas" id="listaTarefas">
+                <!-- As tarefas serão inseridas aqui pelo JavaScript -->
+                <div class="sem-tarefas">
+                    Nenhuma tarefa adicionada ainda.<br>
+                    Digite acima para começar!
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE STATUS (rodapé) -->
+        <div class="barra-status">
+            <span id="contadorTarefas">0 tarefa(s)</span>
+            <span>Much Luv</span>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT - A LÓGICA DO PROGRAMA (O "CÉREBRO") -->
+    <!-- ============================================ -->
+    <script>
+        // =====================================================
+        // VARIÁVEIS GLOBAIS
+        // =====================================================
+        // 'tarefas' é um ARRAY (lista) que guarda todas as tarefas
+        // Cada tarefa é um OBJETO com: id, texto e concluida
+        // =====================================================
+        let tarefas = [];
+
+        // Contador para gerar IDs únicos para cada tarefa
+        let proximoId = 1;
+
+        // =====================================================
+        // FUNÇÃO: ADICIONAR TAREFA
+        // =====================================================
+        // Esta função é chamada quando o usuário clica em 
+        // "Adicionar" ou pressiona Enter no campo de texto
+        // =====================================================
+        function adicionarTarefa() {
+            // 1. PEGA o elemento de input pelo seu ID
+            const input = document.getElementById('inputTarefa');
+
+            // 2. PEGA o texto digitado e remove espaços em branco
+            // .trim() remove espaços do início e do fim
+            const texto = input.value.trim();
+
+            // 3. VERIFICA se o usuário digitou algo
+            // Se estiver vazio, mostra um alerta e para
+            if (texto === '') {
+                alert('Por favor, digite uma tarefa!');
+                return; // 'return' para a função aqui
+            }
+
+            // 4. CRIA um novo objeto de tarefa
+            // Cada tarefa tem 3 propriedades:
+            // - id: número único (para identificar a tarefa)
+            // - texto: o que o usuário digitou
+            // - concluida: false (ainda não foi feita)
+            const novaTarefa = {
+                id: proximoId,
+                texto: texto,
+                concluida: false
+            };
+
+            // 5. ADICIONA a nova tarefa no ARRAY
+            // .push() coloca o item no FINAL da lista
+            tarefas.push(novaTarefa);
+
+            // 6. AUMENTA o contador de ID para a próxima tarefa
+            proximoId++;
+
+            // 7. LIMPA o campo de input
+            input.value = '';
+
+            // 8. COLOCA o cursor de volta no input
+            input.focus();
+
+            // 9. ATUALIZA a tela para mostrar a nova tarefa
+            renderizarTarefas();
+        }
+
+        // =====================================================
+        // FUNÇÃO: RENDERIZAR (MOSTRAR) AS TAREFAS NA TELA
+        // =====================================================
+        // Esta função "desenha" todas as tarefas na tela
+        // Ela é chamada sempre que algo muda (add, delete, check)
+        // =====================================================
+        function renderizarTarefas() {
+            // 1. PEGA o elemento da lista onde as tarefas aparecem
+            const lista = document.getElementById('listaTarefas');
+
+            // 2. PEGA o elemento do contador no rodapé
+            const contador = document.getElementById('contadorTarefas');
+
+            // 3. ATUALIZA o contador
+            // Se houver tarefas, mostra quantas. Se não, mostra 0.
+            const total = tarefas.length;
+            const concluidas = tarefas.filter(t => t.concluida).length;
+            contador.textContent = `${total} tarefa(s) | ${concluidas} concluída(s)`;
+
+            // 4. SE NÃO HOUVER TAREFAS, mostra mensagem de vazio
+            if (tarefas.length === 0) {
+                lista.innerHTML = `
+                    <div class="sem-tarefas">
+                        Nenhuma tarefa adicionada ainda.<br>
+                        Digite acima para começar!
+                    </div>
+                `;
+                return;
+            }
+
+            // 5. SE HOUVER TAREFAS, cria o HTML de cada uma
+            // Usamos .map() para transformar cada tarefa em HTML
+            // Depois .join('') para juntar tudo em uma string
+            lista.innerHTML = tarefas.map(tarefa => {
+                // 'checked' é adicionado se a tarefa estiver concluída
+                const checked = tarefa.concluida ? 'checked' : '';
+
+                // 'concluida' é uma classe CSS que risca o texto
+                const classeConcluida = tarefa.concluida ? 'concluida' : '';
+
+                // Retorna o HTML de UMA tarefa
+                return `
+                    <div class="item-tarefa nova ${classeConcluida}">
+                        <!-- CHECKBOX: marca/desmarca a tarefa -->
+                        <input 
+                            type="checkbox" 
+                            class="checkbox-xp" 
+                            ${checked}
+                            onchange="toggleTarefa(${tarefa.id})"
+                            title="Marcar como concluída"
+                        >
+
+                        <!-- TEXTO da tarefa -->
+                        <span class="texto-tarefa">${tarefa.texto}</span>
+
+                        <!-- BOTÃO DELETAR: remove a tarefa -->
+                        <button 
+                            class="btn-deletar" 
+                            onclick="deletarTarefa(${tarefa.id})"
+                            title="Excluir tarefa"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =====================================================
+        // FUNÇÃO: MARCAR/DESMARCAR TAREFA COMO CONCLUÍDA
+        // =====================================================
+        // Chamada quando o usuário clica no checkbox
+        // 'id' é o número único da tarefa
+        // =====================================================
+        function toggleTarefa(id) {
+            // 1. PROCURA a tarefa no array pelo ID
+            // .find() retorna o PRIMEIRO item que satisfaz a condição
+            const tarefa = tarefas.find(t => t.id === id);
+
+            // 2. SE ENCONTROU, inverte o valor de 'concluida'
+            // true vira false, false vira true
+            if (tarefa) {
+                tarefa.concluida = !tarefa.concluida;
+
+                // 3. ATUALIZA a tela
+                renderizarTarefas();
+            }
+        }
+
+        // =====================================================
+        // FUNÇÃO: DELETAR (REMOVER) UMA TAREFA
+        // =====================================================
+        // Chamada quando o usuário clica no botão X vermelho
+        // =====================================================
+        function deletarTarefa(id) {
+            // 1. CONFIRMA se o usuário realmente quer excluir
+            // confirm() mostra uma caixa de diálogo com OK/Cancelar
+            if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                return; // Se clicou Cancelar, para aqui
+            }
+
+            // 2. FILTRA o array, removendo a tarefa com o ID informado
+            // .filter() cria um NOVO array SEM o item que tem o ID
+            tarefas = tarefas.filter(t => t.id !== id);
+
+            // 3. ATUALIZA a tela
+            renderizarTarefas();
+        }
+
+        // =====================================================
+        // FUNÇÃO: LIMPAR TAREFAS CONCLUÍDAS
+        // =====================================================
+        // Remove TODAS as tarefas que já estão marcadas como feitas
+        // =====================================================
+        function limparConcluidas() {
+            // 1. VERIFICA se há tarefas concluídas
+            const temConcluidas = tarefas.some(t => t.concluida);
+
+            if (!temConcluidas) {
+                alert('Não há tarefas concluídas para limpar!');
+                return;
+            }
+
+            // 2. CONFIRMA a ação
+            if (!confirm('Deseja remover todas as tarefas concluídas?')) {
+                return;
+            }
+
+            // 3. FILTRA, mantendo APENAS as NÃO concluídas
+            tarefas = tarefas.filter(t => !t.concluida);
+
+            // 4. ATUALIZA a tela
+            renderizarTarefas();
+        }
+
+        // =====================================================
+        // INICIALIZAÇÃO
+        // =====================================================
+        // Quando a página carrega, coloca o cursor no input
+        // =====================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('inputTarefa').focus();
+        });
+    </script>
+
+</body>
+</html>
